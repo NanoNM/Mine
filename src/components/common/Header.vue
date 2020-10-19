@@ -69,7 +69,14 @@ export default {
         // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command == 'loginout') {
+                this.$axios.get(this.Common.url+'/userloginout?'+"name="+JSON.parse(sessionStorage.getItem('user'))['userModel']['user_name'])
+          .then(resp => {
+            this.Common.ERROR = resp['data'];
+          }).catch(err => {
+            console.log(err);
+      })
                 sessionStorage.removeItem('user');
+                this.$cookies.remove('token')
                 this.$router.push('/login');
             }
         },

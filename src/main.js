@@ -14,6 +14,8 @@ Vue.prototype.$axios = axios;
 axios.defaults.withCredentials = true;
 import Common from '@/components/common/Common'
 Vue.prototype.Common = Common;
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
 
 Vue.config.productionTip = false;
 Vue.use(VueI18n);

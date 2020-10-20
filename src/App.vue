@@ -47,10 +47,9 @@ export default {
                 if (resp['data'] != '') {
                     this.$message.success('登陆成功');
                     sessionStorage.setItem('user', JSON.stringify(resp['data']));
-                    this.$router.push('/');
+                    this.$router.push('/Dashboard');
                 } else {
-
-                    this.$router.push('/login');
+                    this.$router.push('/');
                 }
 
             }).catch(err => {

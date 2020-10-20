@@ -4,5 +4,8 @@ module.exports = {
     productionSourceMap: false,
     devServer: {
         port: 80,
+        // hot: false,
+        // inline: false,
     }
+    
 }

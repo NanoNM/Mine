@@ -12,21 +12,21 @@
                 </div>
                 <div class="user-info-list">
                     上次登录时间：
-                    <span>2019-11-01</span>
+                    <span>unknow</span>
                 </div>
                 <div class="user-info-list">
                     上次登录地点：
-                    <span>东莞</span>
+                    <span>unknow</span>
                 </div>
             </el-card>
             <el-card shadow="hover" style="height:252px;">
                 <div slot="header" class="clearfix">
-                    <span>语言详情</span>
-                </div>Vue
-                <el-progress :percentage="71.3" color="#42b983"></el-progress>JavaScript
-                <el-progress :percentage="24.1" color="#f1e05a"></el-progress>CSS
-                <el-progress :percentage="13.7"></el-progress>HTML
-                <el-progress :percentage="5.9" color="#f56c6c"></el-progress>
+                    <span>硬件信息 (信息并不准确仅供参考)</span>
+                </div>
+                <div>{{systeminfo['cpuInfo']}}</div> using: {{systeminfo['cpuUserInfo']}}%
+                <el-progress style="margin-top:1%;margin-bottom:1%;" :text-inside="true" :stroke-width="26" :percentage="systeminfo['cpuUserInfo']" :color="customColors"></el-progress>
+                memory using: {{systeminfo['memoryUserInfo']}}%
+                <el-progress style="margin-top:1%;margin-bottom:1%;" :text-inside="true" :stroke-width="26" :percentage="systeminfo['memoryUserInfo']" :color="customColors"></el-progress>
             </el-card>
         </el-col>
         <el-col :span="16">
@@ -36,7 +36,7 @@
                         <div class="grid-content grid-con-1">
                             <i class="el-icon-lx-people grid-con-icon"></i>
                             <div class="grid-cont-right">
-                                <div class="grid-num">{{systeminfo}}</div>
+                                <div class="grid-num">{{systeminfo['system']}}</div>
                                 <div>系统信息</div>
                             </div>
                         </div>
@@ -45,8 +45,8 @@
             </el-row>
             <el-card shadow="hover" style="height:403px;">
                 <div slot="header" class="clearfix">
-                    <span>控制台 当前token: {{adminToken}}</span>
-                    <el-link style="float: right; padding: 3px 0" :type="serverStat">状态</el-link>
+                    <span>控制台 服务器状态参见后面指示器绿色为运行中</span>
+                    <el-link style="float: right; padding: 3px 0" :type="serverStat">MC服务器开关指示器</el-link>
                 </div>
                 <el-input type="textarea" :rows="13" v-model="ServerConsole"></el-input>
                 <el-input style="padding: 20px 0px; width:60%;" v-model="inputcmd" placeholder="输入指令"></el-input>
@@ -55,6 +55,16 @@
                 <el-button style="margin-left:1%;" @click="stopserver()" type="danger">关机</el-button>
                 <el-button style="margin-left:1%;" type="danger">强制关机</el-button>
                 <div>
+                </div>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row :gutter="24">
+        <el-col :span="24">
+            <el-card shadow="hover">
+                <div slot="header" class="clearfix">
+                    <span>快速设置</span>
+                    <el-button style="float: right;" @click="getpropertis()" type="success">获取文件</el-button>
                 </div>
             </el-card>
         </el-col>
@@ -75,8 +85,34 @@ export default {
             ServerConsole: '',
             inputcmd: '',
             adminToken: '',
-            systeminfo: '',
-            setInterval: null
+            systeminfo: {
+                "systemInfo": '',
+                "cpuInfo": '',
+                "cpuUserInfo": '',
+                "memoryUserInfo": '',
+            },
+            setInterval: null,
+            customColors: [{
+                    color: '#5cb87a',
+                    percentage: 20
+                },
+                {
+                    color: '#5cb87a',
+                    percentage: 40
+                },
+                {
+                    color: '#409eff',
+                    percentage: 60
+                },
+                {
+                    color: '#e6a23c',
+                    percentage: 80
+                },
+                {
+                    color: '#f56c6c',
+                    percentage: 100
+                }
+            ]
         }
     },
     components: {
@@ -86,10 +122,17 @@ export default {
 
     },
     mounted() {
+
+        if (window.history && window.history.pushState) {
+            history.pushState(null, null, document.URL)
+            window.addEventListener('popstate', this.goBack, false);
+        }
+
         let user = sessionStorage.getItem('user')
         this.username = JSON.parse(user)['userModel']['user_name']
         this.websocket = new WebSocket(this.Common.socket_url + "/admin/tcpServer")
         this.socket(this.websocket)
+        this.setInterval = setInterval(this.getServerInfo, 6000);
     },
     activated() {
         let user = sessionStorage.getItem('user')
@@ -99,19 +142,51 @@ export default {
     },
     destroyed() {
         this.socketClose(this.websocket)
+        window.removeEventListener('popstate', this.goBack, false);
     },
     deactivated() {
         this.socketClose(this.websocket)
     },
     methods: {
+        goBack() {
+            this.loginout()
+            alert("自动登出")
+            //replace替换原路由，作用是避免回退死循环
+        },
+        loginout() {
+            this.$axios.get(this.Common.url + '/userloginout?' + "name=" + JSON.parse(sessionStorage.getItem('user'))['userModel']['user_name'])
+                .then(resp => {
+
+                }).catch(err => {
+                    console.log(err);
+                })
+            sessionStorage.removeItem('user');
+            this.$cookies.remove('token')
+            this.$router.push('/login');
+        },
         getserverStat() {
-            console.log(WebSocket.OPEN)
             if (this.websocket.readyState == WebSocket.OPEN)
                 this.websocket.send('{"name":"Server","value":"getServerStat","username":"' + this.username + '","token":"' + this.adminToken + '"}')
         },
         getServerInfo() {
-            if (this.websocket.readyState == WebSocket.OPEN)
-                this.websocket.send('{"name":"Server","value":"getServerInfo","username":"' + this.username + '","token":"' + this.adminToken + '"}')
+            // that = this
+            if (sessionStorage.getItem('user') == null) {
+                return
+            }
+            this.$axios.get(this.Common.url + '/admin/getServerInfo?' + 'username=' + this.username)
+                .then(resp => {
+                    if (resp['data'] != '') {
+                        this.systeminfo['system'] = resp['data']['systemInfo']
+                        this.systeminfo['cpuInfo'] = resp['data']['cpuInfo']
+                        this.systeminfo['cpuUserInfo'] = resp['data']['cpuUserInfo']
+                        this.systeminfo['memoryUserInfo'] = resp['data']['memoryUserInfo']
+                    } else {
+                        console.log("getServerInfoError")
+                    }
+
+                }).catch(err => {
+                    console.log(err);
+                })
         },
         startserver() {
             if (this.websocket.readyState == WebSocket.OPEN)
@@ -132,11 +207,12 @@ export default {
         socket(web) {
             var that = this
             web.onopen = function () {
-                that.setInterval = setInterval(that.getserverStat, 3000);
+                that.setInterval = setInterval(that.getserverStat, 5000);
                 // this.$message.success('服务器长连接开启');
             }
             web.onclose = function () {
-                that.setInterval.clearInterval()
+                that.websocket.close()
+                // that.setInterval.clearInterval()
                 // this.$message.success('服务器长连接关闭');
             }
             web.onmessage = function (e) {
@@ -146,7 +222,6 @@ export default {
                 } else if (json['console'] != undefined) {
                     that.ServerConsole = json['console']
                 } else if (json['ServerStat'] != undefined) {
-                    console.log(json['ServerStat'])
                     if (json['ServerStat'] == 1) {
                         that.serverStat = "success"
                     } else {

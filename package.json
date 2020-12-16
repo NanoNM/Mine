@@ -13,13 +13,15 @@
     "element-ui": "^2.11.0",
     "mavon-editor": "^2.6.17",
     "vue": "^2.6.10",
+    "vue-cookies": "^1.7.2",
     "vue-cropperjs": "^3.0.0",
     "vue-i18n": "^8.10.0",
+    "vue-json-ui-editor": "^1.0.0",
+    "vue-json-viewer": "^2.2.16",
     "vue-quill-editor": "^3.0.6",
-    "vue-router": "^3.0.3",
+    "vue-router": "^3.0.7",
     "vue-schart": "^2.0.0",
-    "vuedraggable": "^2.17.0",
-    "vue-cookies": "^1.7.2"
+    "vuedraggable": "^2.17.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.9.0",

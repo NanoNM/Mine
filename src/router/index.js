@@ -1,9 +1,17 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch((err) => err)
+}
+
 Vue.use(Router);
 
 export default new Router({
+    mode: 'history',
     routes: [
         {
             path: '/',
@@ -25,14 +33,14 @@ export default new Router({
                     meta: { title: '自定义图标' }
                 },
                 {
-                    path: '/table',
-                    component: () => import(/* webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
-                    meta: { title: '基础表格' }
+                    path: '/modmanger',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/Modmanger.vue'),
+                    meta: { title: '模组管理' }
                 },
                 {
-                    path: '/tabs',
-                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
-                    meta: { title: 'tab选项卡' }
+                    path: '/pluginmanger',
+                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Pluginmanger.vue'),
+                    meta: { title: '插件管理' }
                 },
                 {
                     path: '/form',

@@ -29,7 +29,7 @@
                 </div>
                 <!-- 用户头像 -->
                 <div class="user-avator">
-                    <img src="../../assets/img/img.jpg" />
+<!--                    <img src="../../assets/img/img.jpg" />-->
                 </div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -68,13 +68,7 @@ export default {
     methods: {
         // 用户名下拉菜单选择事件
         handleCommand(command) {
-            if (command == 'loginout') {
-                this.$axios.get(this.Common.url+'/userloginout?'+"name="+JSON.parse(sessionStorage.getItem('user'))['userModel']['user_name'])
-          .then(resp => {
-            this.Common.ERROR = resp['data'];
-          }).catch(err => {
-            console.log(err);
-      })
+            if (command === 'loginout') {
                 sessionStorage.removeItem('user');
                 this.$cookies.remove('token')
                 this.$router.push('/login');

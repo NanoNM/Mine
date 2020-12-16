@@ -65,6 +65,10 @@ export default {
           icon: "el-icon-s-grid",
           index: "pluginmanger",
           title: "插件管理",
+        },{
+          icon: "el-icon-files",
+          index: "filesystem",
+          title: "文件系统",
         },
       ],
     };

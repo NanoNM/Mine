@@ -169,16 +169,17 @@ export default {
       history.pushState(null, null, document.URL);
       window.addEventListener("popstate", this.goBack, false);
     }
-    this.setInterval = setInterval(this.getServerInfo, 5000);
+    // this.setInterval = setInterval(this.getServerInfo, 5000);
     let user = sessionStorage.getItem("user");
     this.username = JSON.parse(user)["userModel"]["user_name"];
     this.websocket = this.Common.socketObj;
     this.socket(this.websocket);
   },
   activated() {
-    // let user = sessionStorage.getItem("user");
-    // this.username = JSON.parse(user)["userModel"]["user_name"];
+    let user = sessionStorage.getItem("user");
+    this.username = JSON.parse(user)["userModel"]["user_name"];
     // this.websocket = new WebSocket(this.Common.socket_url + "/admin/tcpServer");
+    // this.setInterval = setInterval(this.getServerInfo, 5000);
     // this.socket(this.websocket);
   },
   destroyed() {
@@ -351,11 +352,17 @@ export default {
           that.ServerConsole = json["console"];
         } else if (json["ServerStat"] != undefined) {
           if (json["ServerStat"] == 1) {
-            that.getServerInfo();
+            // that.getServerInfo();
             that.serverStat = "success";
           } else {
             that.serverStat = "danger";
           }
+        }else if (json["systemInfo"] != undefined) {
+          that.systeminfo["system"] =json["systemInfo"][0]["systemInfo"];
+          that.systeminfo["cpuInfo"] = json["systemInfo"][0]["cpuInfo"];
+          that.systeminfo["cpuUserInfo"] = json["systemInfo"][0]["cpuUserInfo"];
+          that.systeminfo["memoryUserInfo"] = json["systemInfo"][0]["memoryUserInfo"];
+          // that.ServerConsole = json["console"];
         }
       };
       // document.getElementById("sendBtn").onclick = function(){

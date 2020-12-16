@@ -43,9 +43,9 @@ export default new Router({
                     meta: { title: '插件管理' }
                 },
                 {
-                    path: '/form',
-                    component: () => import(/* webpackChunkName: "form" */ '../components/page/BaseForm.vue'),
-                    meta: { title: '基本表单' }
+                    path: '/filesystem',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/Filesystem.vue'),
+                    meta: { title: '文件系统' }
                 },
                 {
                     // 富文本编辑器组件

@@ -83,11 +83,19 @@
             sort>
           </json-viewer>
         </el-card>
-        <el-card class="box-card" shadow="hover">
+        <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>上传</span>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="getUploadUrl">上传到服务器</el-button>
           </div>
-          <el-upload class="upload-demo" drag :action="this.updateURL" multiple>
+          <el-upload class="upload-demo"
+                     drag
+                     :http-request="getUploadUrl"
+                     action=""
+                     multiple
+                     :on-change="onFileChange"
+                     :file-list="this.fileList"
+                     :auto-upload="false">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             <div class="el-upload__tip" slot="tip"></div>
@@ -118,31 +126,39 @@
 export default {
   data() {
     return {
+      fileList: [],
       tableData: [],
       moreInfo: ["点击一个模组获取他的信息"],
-      updateURL : this.Common.url + '/admin/upfilemods?' + "name=" +JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +"&token=" + this.Common.adminToken
+      upurl : this.Common.url + '/admin/upfilemods?' + "name=" +JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] + "&token=" + this.Common.adminToken
+
     };
   },
   mounted() {},
   methods: {
-    getModinfo(file) {
-      var that = this;
-      this.$axios
-        .get(
-          this.Common.url +
-            "/admin/moremodinfo?filename="+ file.modFilename +"&name=" +
-            JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
-            "&token=" +
-            that.Common.adminToken,
-          this.param
-        )
-        .then((resp) => {
-          that.moreInfo = resp["data"];
-        })
-        .catch((err) => {
-          this.$message.error("登录失败: " + err + " 建议打开控制台查看");
-          console.log(err);
-        });
+    onFileChange(prams){
+      console.log(prams)
+      this.fileList.push(prams)
+      console.log(this.fileList)
+    },
+    getUploadUrl(){
+      let that = this
+      if (this.fileList.length>0){
+        this.upurl = this.Common.url + '/admin/upfilemods?' + "name=" +JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] + "&token=" + this.Common.adminToken
+        let data = new FormData()
+        data.append("file",this.fileList.pop()['raw'])
+        this.$axios
+                .post(
+                        this.upurl,
+                        data
+                )
+                .then((resp) => {
+                  that.getUploadUrl()
+                })
+                .catch((err) => {
+                  this.$message.error("失败: " + err + " 建议打开控制台查看");
+                  console.log(err);
+                });
+      }
     },
     getMod() {
       var that = this;
@@ -158,7 +174,7 @@ export default {
         that.tableData = resp["data"];
       })
       .catch((err) => {
-        this.$message.error("登录失败: " + err + " 建议打开控制台查看");
+        this.$message.error("失败: " + err + " 建议打开控制台查看");
         console.log(err);
       }); 
     },
@@ -181,7 +197,7 @@ export default {
           this.getMod();
         })
         .catch((err) => {
-          this.$message.error("登录失败: " + err + " 建议打开控制台查看");
+          this.$message.error("失败: " + err + " 建议打开控制台查看");
           console.log(err);
         });
       }

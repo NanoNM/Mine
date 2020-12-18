@@ -8,7 +8,8 @@
 @import "./assets/css/main.css";
 @import "./assets/css/color-dark.css";
 /*深色主题*/
-/*@import "./assets/css/theme-green/color-green.css";   浅绿色主题*/
+/*@import "./assets/css/theme-green/color-green.css";*/
+/*浅绿色主题*/
 </style>
 
 <script>
@@ -65,24 +66,12 @@ export default {
       .catch((err) => {
         console.log(err);
       });
-
-    // this.$axios
-    //   .get(this.Common.url + "/errorcode")
-    //   .then((resp) => {
-    //     this.$message.success(resp["data"]);
-    //     //
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     this.t1 = setInterval(this.tTime, 1000);
   },
   methods: {
     toCloseFun() {},
     clicked() {
       this.lTime = new Date().getTime(); //当界面被点击更新点击时间
-      //console.log(this.lTime)
-      //console.log(this.cTime)
     },
     tTime() {
       this.cTime = new Date().getTime();

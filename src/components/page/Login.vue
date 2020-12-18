@@ -75,7 +75,7 @@ export default {
             this.$message.success("登陆成功");
             sessionStorage.setItem("user", JSON.stringify(resp["data"]));
             that.Common.socketObj = new WebSocket(
-              that.Common.socket_url + "/admin/tcpServer"
+              that.Common.socket_url + "/admin/tcpServer/" + JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"]
             );
             this.$router.push("/Dashboard");
           } else {

@@ -34,7 +34,7 @@ const i18n = new VueI18n({
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | vue-manage-system`;
+    document.title = `${to.meta.title} | MinecraftManger`;
     const role = sessionStorage.getItem('user');
     if (!role && to.path !== '/login') {
         next('/login');

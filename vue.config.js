@@ -7,5 +7,4 @@ module.exports = {
         // hot: false,
         // inline: false,
     }
-    
 }

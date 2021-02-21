@@ -69,6 +69,14 @@ export default {
           icon: "el-icon-files",
           index: "filesystem",
           title: "文件系统",
+        },{
+          icon: "el-icon-s-custom",
+          index: "adminmanger",
+          title: "管理员管理",
+        }, {
+          icon: "el-icon-user",
+          index: "usermanger",
+          title: "成员管理",
         },
       ],
     };

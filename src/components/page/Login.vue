@@ -9,14 +9,14 @@
                     label-width="0px"
                     class="ms-content">
                 <el-form-item prop="username">
-                    <el-input v-model="param.username" placeholder="username">
+                    <el-input v-model="param.username" placeholder="用户名">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input
                             type="password"
-                            placeholder="password"
+                            placeholder="密码"
                             v-model="param.password"
                             @keyup.enter.native="submitForm()">
                         <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
@@ -47,14 +47,14 @@
                     username: [
                         {
                             required: true,
-                            message: "你咋回事??",
+                            message: "没名字我怎么登录 宝贝??",
                             trigger: "blur",
                         },
                     ],
                     password: [
                         {
                             required: true,
-                            message: "你咋回事??",
+                            message: "没密码我怎么登录 宝贝??",
                             trigger: "blur",
                         },
                     ],
@@ -109,7 +109,8 @@
         position: relative;
         width: 100%;
         height: 100%;
-        background-image: url(../../assets/img/login-bg.jpg);
+        /*background-image: url(../../assets/img/login-bg.jpg);*/
+        background-color: #72767b;
         background-size: 100%;
     }
 
@@ -129,7 +130,7 @@
         width: 350px;
         margin: -190px 0 0 -175px;
         border-radius: 5px;
-        background: rgba(255, 255, 255, 0.3);
+        background: #c8c9cc;
         overflow: hidden;
     }
 

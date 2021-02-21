@@ -149,6 +149,25 @@
         mounted() {
         },
         methods: {
+            getModinfo(file) {
+                var that = this;
+                this.$axios
+                    .get(
+                        this.Common.url +
+                        "/admin/moremodinfo?filename="+ file.modFilename +"&name=" +
+                        JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+                        "&token=" +
+                        that.Common.adminToken,
+                        this.param
+                    )
+                    .then((resp) => {
+                        that.moreInfo = resp["data"];
+                    })
+                    .catch((err) => {
+                        this.$message.error("失败: " + err + " 建议打开控制台查看");
+                        console.log(err);
+                    });
+            },
             onFileChange(prams) {
                 console.log(prams)
                 this.fileList.push(prams)

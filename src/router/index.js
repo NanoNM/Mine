@@ -28,11 +28,6 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
-                    path: '/icon',
-                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
-                    meta: { title: '自定义图标' }
-                },
-                {
                     path: '/modmanger',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/Modmanger.vue'),
                     meta: { title: '模组管理' }
@@ -48,29 +43,14 @@ export default new Router({
                     meta: { title: '文件系统' }
                 },
                 {
-                    // 富文本编辑器组件
-                    path: '/editor',
-                    component: () => import(/* webpackChunkName: "editor" */ '../components/page/VueEditor.vue'),
-                    meta: { title: '富文本编辑器' }
+                    path: '/adminmanger',
+                    component: () => import(/* webpackChunkName: "403" */ '../components/page/Adminmanger.vue'),
+                    meta: { title: '管理员管理' }
                 },
                 {
-                    // markdown组件
-                    path: '/markdown',
-                    component: () => import(/* webpackChunkName: "markdown" */ '../components/page/Markdown.vue'),
-                    meta: { title: 'markdown编辑器' }
-                },
-                {
-                    // 图片上传组件
-                    path: '/upload',
-                    component: () => import(/* webpackChunkName: "upload" */ '../components/page/Upload.vue'),
-                    meta: { title: '文件上传' }
-                },
-
-                {
-                    // 国际化组件
-                    path: '/i18n',
-                    component: () => import(/* webpackChunkName: "i18n" */ '../components/page/I18n.vue'),
-                    meta: { title: '国际化' }
+                    path: '/usermanger',
+                    component: () => import(/* webpackChunkName: "403" */ '../components/page/Usermanger.vue'),
+                    meta: { title: '成员管理' }
                 },
                 {
                     // 权限页面
@@ -88,6 +68,7 @@ export default new Router({
                     component: () => import(/* webpackChunkName: "403" */ '../components/page/403.vue'),
                     meta: { title: '403' }
                 },
+
             ]
         },
         {

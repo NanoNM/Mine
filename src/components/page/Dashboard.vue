@@ -5,11 +5,11 @@
                 <el-card shadow="hover" class="mgb20" style="height: 252px">
                     <div class="user-info-list">
                         SpringBoot启动时间
-                        <span>{{systemData["springBootStartTime"] || "unknow"}}</span>
+                        <span>{{systemData["springBootStartTime"] || "未获取"}}</span>
                     </div>
                     <div class="user-info-list">
                         SpringBoot运行时间
-                        <span>{{systemData["springBootRunningTime"] || "unknow"}}</span>
+                        <span>{{systemData["springBootRunningTime"] || "未获取"}}</span>
                     </div>
 
                     <div class="user-info">
@@ -20,11 +20,11 @@
 
                     <div class="user-info-list">
                         MCServer启动时间
-                        <span>unknow</span>
+                        <span>{{systemData["mcServerStartTime"] || "未获取"}}</span>
                     </div>
                     <div class="user-info-list">
                         MCServer运行时间
-                        <span>unknow</span>
+                        <span>{{systemData["mcServerRunningTime"] || "未获取"}}</span>
                     </div>
 
                     <div class="user-info">
@@ -34,8 +34,7 @@
                     </div>
 
                     <div class="user-info-list">
-                        MC服务器状态
-                        <span><el-link style="float: right; padding: 3px 0" :type="serverStat">状态</el-link></span>
+
                     </div>
                 </el-card>
                 <el-card shadow="hover" style="height: 252px">
@@ -79,11 +78,26 @@
                 <el-card shadow="hover" style="height: 403px">
                     <div slot="header" class="clearfix">
                         <span>控制台</span>
+                        <span >
+                        <el-input placeholder="请输入内容" v-model="serverCom" size="medium" style="width: 70%;padding-left: 10%;">
+                          <template #prepend>java -jar</template>
+                          <template #append >
+                            <el-select style=" width: 150px"  v-model="selectjar" :placeholder="selectjar" @change="" @focus="getServerJar()">
+                              <el-option
+                                  v-for="item in options"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                              </el-option>
+                            </el-select>
+                          </template>
+                        </el-input>
+                      </span>
                         <el-link style="float: right; padding: 3px 0" :type="serverStat">状态</el-link>
                     </div>
-                    <el-input type="textarea" :rows="13" v-model="ServerConsole"></el-input>
+                    <el-input id="mineconsole" type="textarea" :rows="11" v-model="ServerConsole"></el-input>
                     <el-input
-                            style="padding: 20px 0px; width: 60%"
+                            style="padding: 20px 0px; width: 50%"
                             v-model="inputcmd"
                             placeholder="输入指令"
                     ></el-input>
@@ -99,8 +113,7 @@
                     >关机
                     </el-button
                     >
-                    <el-button style="margin-left: 1%" type="danger">强制关机</el-button>
-                    <div></div>
+                    <el-button style="margin-left: 1%" @click="notsafestopserver()" type="danger">强制关机</el-button>
                 </el-card>
             </el-col>
         </el-row>
@@ -152,6 +165,8 @@
                     cpuUserInfo: "",
                     memoryUserInfo: "",
                 },
+                serverCom: '',
+                sepackage: '',
                 systemData: '',
                 setInterval: null,
                 customColors: [
@@ -177,6 +192,11 @@
                     },
                 ],
                 fastSetting: {},
+              options: [{
+                value: 'server.jar',
+                label: 'server.jar'
+              }],
+              selectjar: 'server.jar'
             };
         },
         components: {},
@@ -208,6 +228,37 @@
             clearInterval(this.setInterval);
         },
         methods: {
+          getServerJar() {
+            let that = this;
+            this.$axios
+                .get(
+                    this.Common.url +
+                    "/admin/getjar?" +
+                    "name=" +
+                    JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+                    "&token=" +
+                    this.adminToken
+                )
+                .then((resp) => {
+                  let data = resp["data"]
+                  // that.options.clear()
+                  that.options.length = 0
+                  for (let i=0;i<data.length;i++)
+                  {
+                    let option = {"value":"","label":""};
+                    option["value"] = data[i]
+                    option["label"] = data[i]
+
+                    that.options.push(option)
+                    // that.options[i]["value"] = data[i]
+                    console.log(data[i]);
+                  }
+
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+          },
             setpropertis() {
                 this.$axios
                     .get(
@@ -306,14 +357,30 @@
                     });
             },
             startserver() {
+
+              //         let string =
+              // console.log(string)
                 if (this.websocket.readyState == WebSocket.OPEN)
                     this.websocket.send(
                         '{"name":"cmd","value":"startserver","username":"' +
                         this.username +
                         '","token":"' +
                         this.adminToken +
+                        '","startservercmd":" '+
+                        this.serverCom +" "+
+                        this.selectjar +
                         '"}'
                     );
+            },
+            notsafestopserver(){
+              if (this.websocket.readyState == WebSocket.OPEN)
+                this.websocket.send(
+                    '{"name":"cmd","value":"hardstop","username":"' +
+                    this.username +
+                    '","token":"' +
+                    this.adminToken +
+                    '"}'
+                );
             },
             stopserver() {
                 if (this.websocket.readyState == WebSocket.OPEN)
@@ -336,6 +403,7 @@
                         this.adminToken +
                         '"}'
                     );
+              this.inputcmd = "";
             },
             socketClose(web) {
                 web.send("");
@@ -368,7 +436,13 @@
                         that.Common.adminToken = that.adminToken;
                         that.sendname();
                     } else if (json["console"] != undefined) {
-                        that.ServerConsole = json["console"];
+                        that.$nextTick(() => {
+                          setTimeout(() => {
+                            const textarea = document.getElementById('mineconsole');
+                            textarea.scrollTop = textarea.scrollHeight;
+                          }, 13)
+                        })
+                        that.ServerConsole += json["console"];
                     } else if (json["ServerStat"] != undefined) {
                         if (json["ServerStat"] == 1) {
                             // that.getServerInfo();
@@ -382,7 +456,7 @@
                         that.systeminfo["cpuUserInfo"] = json["systemInfo"][0]["cpuUserInfo"];
                         that.systeminfo["memoryUserInfo"] = json["systemInfo"][0]["memoryUserInfo"];
                         that.systemData = json["systemInfo"][0]
-                        // that.ServerConsole = json["console"];
+                      // that.ServerConsole = json["console"];
                     }
                 };
                 // document.getElementById("sendBtn").onclick = function(){

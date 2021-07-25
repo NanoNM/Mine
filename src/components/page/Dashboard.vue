@@ -77,9 +77,9 @@
                 </el-row>
                 <el-card shadow="hover" style="height: 403px">
                     <div slot="header" class="clearfix">
-                        <span>控制台</span>
-                        <span >
-                        <el-input placeholder="请输入内容" v-model="serverCom" size="medium" style="width: 70%;padding-left: 10%;">
+                      <span>控制台</span>
+                      <span>
+                        <el-input placeholder="java运行参数" v-model="serverCom" size="medium" style="width: 70%;padding-left: 10%;">
                           <template #prepend>java -jar</template>
                           <template #append >
                             <el-select style=" width: 150px"  v-model="selectjar" :placeholder="selectjar" @change="" @focus="getServerJar()">
@@ -101,19 +101,12 @@
                             v-model="inputcmd"
                             placeholder="输入指令"
                     ></el-input>
-                    <el-button style="margin-left: 1%" @click="sendcmd()" type="primary"
-                    >发送
-                    </el-button
-                    >
-                    <el-button style="margin-left: 1%" @click="startserver()" type="success"
-                    >开机
-                    </el-button
-                    >
-                    <el-button style="margin-left: 1%" @click="stopserver()" type="danger"
-                    >关机
-                    </el-button
-                    >
+                    <el-button style="margin-left: 1%" @click="sendcmd()" type="primary">发送</el-button>
+                    <el-button style="margin-left: 1%" @click="startserver()" type="success">开机</el-button>
+                    <el-button style="margin-left: 1%" @click="synchronization()" type="primary">同步数据</el-button>
+                    <el-button style="margin-left: 1%" @click="stopserver()" type="danger">关机</el-button>
                     <el-button style="margin-left: 1%" @click="notsafestopserver()" type="danger">强制关机</el-button>
+                    <el-button style="margin-left: 1%" @click="clearConsole()" type="danger">清空控制台</el-button>
                 </el-card>
             </el-col>
         </el-row>
@@ -356,6 +349,9 @@
                         console.log(err);
                     });
             },
+            synchronization(){
+
+            },
             startserver() {
 
               //         let string =
@@ -371,6 +367,9 @@
                         this.selectjar +
                         '"}'
                     );
+            },
+            clearConsole(){
+              this.ServerConsole = '';
             },
             notsafestopserver(){
               if (this.websocket.readyState == WebSocket.OPEN)
@@ -442,6 +441,9 @@
                             textarea.scrollTop = textarea.scrollHeight;
                           }, 13)
                         })
+                        if (that.ServerConsole.length>100000){
+                          that.ServerConsole = "";
+                        }
                         that.ServerConsole += json["console"];
                     } else if (json["ServerStat"] != undefined) {
                         if (json["ServerStat"] == 1) {

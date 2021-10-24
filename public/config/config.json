@@ -1,0 +1,6 @@
+{
+  "url": "http://localhost:25567",
+  "socket_url": "ws://localhost:25567",
+  "timeInterval": 5000
+}
+

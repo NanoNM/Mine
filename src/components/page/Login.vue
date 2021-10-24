@@ -24,7 +24,8 @@
                 </el-form-item>
                 <!-- <el-checkbox v-model="param.isautologin">自动登录</el-checkbox> -->
                 <div class="login-btn">
-                    <el-button type="primary" @click="submitForm()">登录</el-button>
+
+                    <el-button type="primary" @click="submitForm()" :disabled="loginDisable">登录</el-button>
                 </div>
                 <p class="login-tips">Tips : 管理员系统并不支持记住登陆</p>
             </el-form>
@@ -38,6 +39,7 @@
             return {
                 socketo: null,
                 url: this.Common.url + "/admin/login",
+                loginDisable: false,
                 param: {
                     username: "",
                     password: "",
@@ -63,10 +65,12 @@
         },
 
         mounted() {
+          // console.log(this.Common.url);
         },
         methods: {
             submitForm() {
-                var that = this;
+                this.loginDisable=true
+                let that = this;
                 this.$axios({
                     url: this.Common.url + "/errorcode",
                     method: "get",
@@ -91,14 +95,18 @@
                                 that.Common.socket_url + "/admin/tcpServer/" + JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"]
                             );
                             this.$router.push("/Dashboard");
+                          that.loginDisable=false
                         } else {
                             this.$message.error("登录失败: " + resp["data"]["code"]);
+                          that.loginDisable=false
                         }
                     })
                     .catch((err) => {
                         this.$message.error("登录失败: " + err + " 建议打开控制台查看");
                         console.log(err);
+                      that.loginDisable=false
                     });
+
             },
         },
     };

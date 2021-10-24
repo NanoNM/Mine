@@ -15,9 +15,10 @@ import axios from 'axios';
 
 Vue.prototype.$axios = axios;
 axios.defaults.withCredentials = true;
-axios.defaults.headers.common["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
+axios.defaults.headers.common["Accept"] = "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
 import Common from '@/components/common/Common'
 Vue.prototype.Common = Common;
+
 import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)
 Vue.use(JsonViewer)
@@ -30,7 +31,6 @@ const i18n = new VueI18n({
     locale: 'zh',
     messages
 });
-
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {

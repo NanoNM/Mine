@@ -195,6 +195,11 @@
         components: {},
         computed: {},
         mounted() {
+            if (JSON.parse(sessionStorage.getItem("user"))["userModel"] == null){
+              sessionStorage.removeItem("user");
+              this.$cookies.remove("token");
+              this.$router.push("/login");
+            }
             if (window.history && window.history.pushState) {
                 history.pushState(null, null, document.URL);
                 window.addEventListener("popstate", this.goBack, false);
@@ -206,6 +211,7 @@
             this.socket(this.websocket);
         },
         activated() {
+
             let user = sessionStorage.getItem("user");
             this.username = JSON.parse(user)["userModel"]["user_name"];
             // this.websocket = new WebSocket(this.Common.socket_url + "/admin/tcpServer");

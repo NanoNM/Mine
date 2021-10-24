@@ -13,6 +13,9 @@
 </style>
 
 <script>
+    import axios from "axios";
+    import Common from "@/components/common/Common";
+
     export default {
         name: "app",
         data() {
@@ -25,50 +28,79 @@
             };
         },
         mounted() {
-            window.onbeforeunload = (e) => {
-                e = e || window.event;
-                if (e) {
-                    e.returnValue = "";
-                }
-
-                this.loginout(); //调用自己的方法
-
-                // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
-
-                //return '确认关闭??';
-            };
+          //config 获取
+          axios.get('/config/config.json').then((result) => {
+            // console.log(result)
+            // localStorage.setItem('url', result.data.url)
+            // console.log(localStorage.getItem('url'))
+            Common.url = result.data.url
+            Common.socket_url = result.data.socket_url
+            Common.timeInterval = result.data.timeInterval
             this.$axios
-                .get(this.Common.url + "/autologin?" + "token=" + this.$cookies.get("token"))
+                .get(Common.url + "/autologin?" + "token=" + this.$cookies.get("token"))
                 .then((resp) => {
-                    if (resp["data"] !== "") {
-                        this.$message.success("登陆成功");
-                        sessionStorage.setItem("user", JSON.stringify(resp["data"]));
-                        this.$router.push("/Dashboard");
-                    } else {
-                        this.$router.push("/");
-                    }
+                  if (resp["data"] !== "") {
+                    this.$message.success("登陆成功");
+                    sessionStorage.setItem("user", JSON.stringify(resp["data"]));
+
+                    this.$router.push("/Dashboard");
+                  } else {
+                    this.$router.push("/");
+                  }
                 })
                 .catch((err) => {
-                    console.log(err);
+                  console.log(err);
                 });
             //拉取服务的错误信息
             this.$axios({
-                url: this.Common.url + "/errorcode",
-                method: "get",
-                headers: {
-                    Accept:
-                        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                },
+              url: this.Common.url + "/errorcode",
+              method: "get",
+              headers: {
+                Accept:
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+              },
             })
                 .then((respanse) => {
-                    this.Common.ERROR = respanse["data"];
+                  this.Common.ERROR = respanse["data"];
                 })
                 .catch((err) => {
-                    console.log(err);
+                  console.log(err);
                 });
-            this.t1 = setInterval(this.tTime, 1000);
+          }).catch((error) => {
+            console.log('=====ERROR axios.get(\'/config/config.json\')=====')
+            console.log(error)
+            console.log('=====ERROR END=====')
+          });
+          // let that = this;
+          window.addEventListener('beforeunload', e => this.beforeunloadFn(e))
+          // window.addEventListener('beforeunload', (event) => {
+          //   // Cancel the event as stated by the standard.
+          //   event.preventDefault();
+          //   // Chrome requires returnValue to be set.
+          //   event.returnValue = '';
+          // });
+          // window.onbeforeunload = (e) => {
+          //       e = e || window.event;
+          //       if (e) {
+          //           e.returnValue = "";
+          //       }
+          //
+          //       // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+          //       return '确认关闭??';
+          //   };
+
+          this.t1 = setInterval(this.tTime, 1000);
         },
-        methods: {
+      destroyed() {
+        window.removeEventListener('beforeunload', e => this.beforeunloadFn(e))
+      },
+      methods: {
+            beforeunloadFn (e) {
+              this.loginout()
+              this.$alert("刷新页面请重新登陆，不支持刷新页面", "提示", {
+                confirmButtonText: "确定",
+              });
+            },
             toCloseFun() {
             },
             clicked() {
@@ -98,9 +130,10 @@
                         JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"]
                     )
                     .then((resp) => {
+
                     })
                     .catch((err) => {
-                        console.log(err);
+                      console.log(err);
                     });
                 sessionStorage.removeItem("user");
                 this.$cookies.remove("token");

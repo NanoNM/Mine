@@ -29,6 +29,7 @@
           <el-table-column prop="create_time" label="注册时间"></el-table-column>
           <el-table-column prop="modify_time" label="修改时间"></el-table-column>
           <el-table-column prop="create_by" label="创建者"></el-table-column>
+          <el-table-column prop="last_login_time" label="最后登录时间"></el-table-column>
           <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
               <el-button

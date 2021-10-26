@@ -53,13 +53,17 @@
             <el-button type="danger" icon="el-icon-delete" style="float: right;" @click="">清空垃圾箱</el-button>
           </div>
           <el-table :data="removed" style="width: 100%" max-height="250">
-              <el-table-column label="模组名称" prop="modFilename" :key="Math.random()">
+              <el-table-column label="模组名称" prop="plguinFilename" :key="Math.random()">
+
               </el-table-column>
               <el-table-column label="当前状态" prop="status" :key="Math.random()">
               </el-table-column>
               <el-table-column label="可用操作" prop="desc" :key="Math.random()">
                 <template slot-scope="scope">
                   <el-button type="success" icon="el-icon-circle-plus-outline" @click="modcmd('able',scope.row.plguinFilename)">启用</el-button>
+                  <el-button type="danger" icon="el-icon-delete"
+                             @click="modcmd('completelyDelete',scope.row.plguinFilename)">彻底删除
+                  </el-button>
                 </template>
               </el-table-column>
           </el-table>
@@ -202,9 +206,9 @@ export default {
         "/admin/pluginScanning?name=" +
         JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
         "&token=" +
-        this.Common.adminToken + 
-        "&cmd=" + 
-        cmd + 
+        this.Common.adminToken +
+        "&cmd=" +
+        cmd +
         "&filename=" + encodeURIComponent(filename)
         )
         .then((resp) => {

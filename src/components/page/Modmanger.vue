@@ -73,6 +73,9 @@
                                 <el-button type="success" icon="el-icon-circle-plus-outline"
                                            @click="modcmd('able',scope.row.modFilename)">启用
                                 </el-button>
+                                <el-button type="danger" icon="el-icon-delete"
+                                           @click="modcmd('completelyDelete',scope.row.modFilename)">彻底删除
+                                </el-button>
                             </template>
                             <!-- <el-button type="warning" icon="el-icon-star-off" circle></el-button>
                             <el-button type="danger" icon="el-icon-delete" circle></el-button> -->
@@ -212,27 +215,58 @@
                     });
             },
             modcmd(cmd, filename) {
-                console.log(cmd)
-                var that = this;
-                if (cmd != undefined) {
-                    this.$axios
-                        .get(
-                            this.Common.url +
-                            "/admin/modScanning?name=" +
-                            JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
-                            "&token=" +
-                            this.Common.adminToken +
-                            "&cmd=" +
-                            cmd +
-                            "&filename=" + encodeURIComponent(filename)
-                        )
+              let that = this;
+              if (cmd === "completelyDelete"){
+                  this.$confirm("你确定要删除这个模组吗?\n‘"+filename+"’将会永远失去！（真的很久！）","提示",{
+                    iconClass: "el-icon-question",//自定义图标样式
+                    confirmButtonText: "确认",//确认按钮文字更换
+                    cancelButtonText: "取消",//取消按钮文字更换
+                    showClose: true,//是否显示右上角关闭按钮
+                    type: "warning",//提示类型  success/info/warning/error
+                  }).then(function(){
+
+                  }).then((data) => {
+                    this.$axios.get(
+                        this.Common.url +
+                        "/admin/modScanning?name=" +
+                        JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+                        "&token=" +
+                        this.Common.adminToken +
+                        "&cmd=" +
+                        cmd +
+                        "&filename=" + encodeURIComponent(filename)
+                    )
                         .then((resp) => {
-                            this.getMod();
+                          this.getMod();
                         })
                         .catch((err) => {
-                            this.$message.error("失败: " + err + " 建议打开控制台查看");
-                            console.log(err);
+                          this.$message.error("失败: " + err + " 建议打开控制台查看");
+                          console.log(err);
                         });
+                  })
+                  .catch(function (err) {
+                    //捕获异常
+                  });
+                }else{
+                  if (cmd !== undefined) {
+                    this.$axios.get(
+                        this.Common.url +
+                        "/admin/modScanning?name=" +
+                        JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+                        "&token=" +
+                        this.Common.adminToken +
+                        "&cmd=" +
+                        cmd +
+                        "&filename=" + encodeURIComponent(filename)
+                    )
+                    .then((resp) => {
+                      this.getMod();
+                    })
+                    .catch((err) => {
+                      this.$message.error("失败: " + err + " 建议打开控制台查看");
+                      console.log(err);
+                    });
+                  }
                 }
             }
         },

@@ -39,7 +39,7 @@
                 </el-card>
                 <el-card shadow="hover" style="height: 252px">
                     <div slot="header" class="clearfix">
-                        <span>硬件信息 (信息并不准确仅供参考)</span>
+                        <span>硬件信息 (仅供参考)</span>
                     </div>
                     处理器占用: {{ systeminfo["cpuUserInfo"] }}%
                     <el-progress
@@ -103,7 +103,7 @@
                     ></el-input>
                     <el-button style="margin-left: 1%" @click="sendcmd()" type="primary">发送</el-button>
                     <el-button style="margin-left: 1%" @click="startserver()" type="success">开机</el-button>
-                    <el-button style="margin-left: 1%" @click="synchronization()" type="primary">同步数据</el-button>
+                    <el-button style="margin-left: 1%" @click="synchronizationConsole()" type="primary">同步数据</el-button>
                     <el-button style="margin-left: 1%" @click="stopserver()" type="danger">关机</el-button>
                     <el-button style="margin-left: 1%" @click="notsafestopserver()" type="danger">强制关机</el-button>
                     <el-button style="margin-left: 1%" @click="clearConsole()" type="danger">清空控制台</el-button>
@@ -141,8 +141,10 @@
     import Schart from "vue-schart";
     import bus from "../common/bus";
     import LoginPage from "./Login";
+    import pako from 'pako'
 
     export default {
+
         name: "dashboard",
         data() {
             return {
@@ -355,8 +357,34 @@
                         console.log(err);
                     });
             },
-            synchronization(){
+            synchronizationConsole(){
+              this.$axios.get(
+                this.Common.url +
+                "/admin/synchronizationConsole?name=" +
+                JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+                "&token=" +
+                this.Common.adminToken
+                )
+                .then((resp) => {
+                  // console.log(resp['data'])
 
+                  var strData = atob(resp['data'])
+                  // Convert binary string to character-number array
+                  var charData = strData.split('').map(function(x) { return x.charCodeAt(0) })
+                  // Turn number array into byte-array
+                  var binData = new Uint8Array(charData)
+                  // unzip
+                  var data = pako.inflate(binData)
+                  // Convert gunzipped byteArray back to ascii string:
+                  strData = String.fromCharCode.apply(null, new Uint16Array(data))
+                  this.ServerConsole = strData
+                  // console.log(strData)
+
+                })
+                .catch((err) => {
+                  this.$message.error("失败: " + err + " 建议打开控制台查看");
+                  console.log(err);
+                });
             },
             startserver() {
 

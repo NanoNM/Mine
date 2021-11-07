@@ -3,9 +3,7 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>插件管理器</span>
-        <el-button style="float: right; padding: 3px 0" type="text" @click="getMod()"
-          >取得信息</el-button
-        >
+        <el-button style="float: right; padding: 3px 0" type="text" @click="getMod()">取得信息</el-button>
       </div>
       <el-col :span="16">
         <el-card class="box-card">
@@ -20,8 +18,11 @@
             <el-table-column label="可用操作" prop="" :key="Math.random()">
               <template slot-scope="scope">
                 <!-- <el-button type="success" icon="el-icon-check" circle></el-button> -->
-                <el-button type="warning" icon="el-icon-remove-outline" @click="modcmd('disable',scope.row.plguinFilename)">禁用</el-button>
-                <el-button type="danger" icon="el-icon-delete" @click="modcmd('remove',scope.row.plguinFilename)">删除</el-button>
+                <el-button type="warning" icon="el-icon-remove-outline"
+                           @click="modcmd('disable',scope.row.plguinFilename)">禁用
+                </el-button>
+                <el-button type="danger" icon="el-icon-delete" @click="modcmd('remove',scope.row.plguinFilename)">删除
+                </el-button>
                 <el-button type="info" icon="el-icon-check" @click="getModinfo(scope.row)">更多信息</el-button>
               </template>
             </el-table-column>
@@ -32,18 +33,20 @@
             <span>禁用中</span>
           </div>
           <el-table :data="disable" style="width: 100%" max-height="250">
-              <el-table-column label="模组名称" prop="plguinFilename" :key="Math.random()">
-              </el-table-column>
-              <el-table-column label="当前状态" prop="status" :key="Math.random()">
-              </el-table-column>
-              <el-table-column label="可用操作" prop="desc" :key="Math.random()">
-                <template slot-scope="scope">
+            <el-table-column label="模组名称" prop="plguinFilename" :key="Math.random()">
+            </el-table-column>
+            <el-table-column label="当前状态" prop="status" :key="Math.random()">
+            </el-table-column>
+            <el-table-column label="可用操作" prop="desc" :key="Math.random()">
+              <template slot-scope="scope">
                 <!-- <el-button type="success" icon="el-icon-check" circle></el-button> -->
-                  <el-button type="success" icon="el-icon-circle-plus-outline" @click="modcmd('able',scope.row.plguinFilename)">启用</el-button>
-                </template>
-                <!-- <el-button type="warning" icon="el-icon-star-off" circle></el-button>
-                <el-button type="danger" icon="el-icon-delete" circle></el-button> -->
-              </el-table-column>
+                <el-button type="success" icon="el-icon-circle-plus-outline"
+                           @click="modcmd('able',scope.row.plguinFilename)">启用
+                </el-button>
+              </template>
+              <!-- <el-button type="warning" icon="el-icon-star-off" circle></el-button>
+              <el-button type="danger" icon="el-icon-delete" circle></el-button> -->
+            </el-table-column>
           </el-table>
         </el-card>
 
@@ -53,19 +56,21 @@
             <el-button type="danger" icon="el-icon-delete" style="float: right;" @click="">清空垃圾箱</el-button>
           </div>
           <el-table :data="removed" style="width: 100%" max-height="250">
-              <el-table-column label="模组名称" prop="plguinFilename" :key="Math.random()">
+            <el-table-column label="模组名称" prop="plguinFilename" :key="Math.random()">
 
-              </el-table-column>
-              <el-table-column label="当前状态" prop="status" :key="Math.random()">
-              </el-table-column>
-              <el-table-column label="可用操作" prop="desc" :key="Math.random()">
-                <template slot-scope="scope">
-                  <el-button type="success" icon="el-icon-circle-plus-outline" @click="modcmd('able',scope.row.plguinFilename)">启用</el-button>
-                  <el-button type="danger" icon="el-icon-delete"
-                             @click="modcmd('completelyDelete',scope.row.plguinFilename)">彻底删除
-                  </el-button>
-                </template>
-              </el-table-column>
+            </el-table-column>
+            <el-table-column label="当前状态" prop="status" :key="Math.random()">
+            </el-table-column>
+            <el-table-column label="可用操作" prop="desc" :key="Math.random()">
+              <template slot-scope="scope">
+                <el-button type="success" icon="el-icon-circle-plus-outline"
+                           @click="modcmd('able',scope.row.plguinFilename)">启用
+                </el-button>
+                <el-button type="danger" icon="el-icon-delete"
+                           @click="modcmd('completelyDelete',scope.row.plguinFilename)">彻底删除
+                </el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </el-card>
       </el-col>
@@ -75,11 +80,11 @@
             <span>详细信息</span>
           </div>
           <json-viewer
-            :value="moreInfo"
-            :expand-depth=5
-            copyable
-            boxed
-            sort>
+              :value="moreInfo"
+              :expand-depth=5
+              copyable
+              boxed
+              sort>
           </json-viewer>
         </el-card>
         <el-card class="box-card">
@@ -109,10 +114,12 @@
 .demo-table-expand {
   font-size: 0;
 }
+
 .demo-table-expand label {
   width: 90px;
   color: #99a9bf;
 }
+
 .demo-table-expand .el-form-item {
   margin-right: 0;
   margin-bottom: 0;
@@ -128,96 +135,97 @@ export default {
       fileList: [],
       tableData: [],
       moreInfo: ["点击一个插件获取他的信息"],
-      upurl : this.Common.url + '/admin/upfileplugins?' + "name=" +JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] + "&token=" + this.Common.adminToken
+      upurl: this.Common.url + '/admin/upfileplugins?' + "name=" + JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] + "&token=" + this.Common.adminToken
 
     };
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
-    onFileChange(prams){
+    onFileChange(prams) {
       console.log(prams)
       this.fileList.push(prams)
       console.log(this.fileList)
     },
-    getUploadUrl(){
+    getUploadUrl() {
       let that = this
-      if (this.fileList.length>0){
-        this.upurl = this.Common.url + '/admin/upfileplugins?' + "name=" +JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] + "&token=" + this.Common.adminToken
+      if (this.fileList.length > 0) {
+        this.upurl = this.Common.url + '/admin/upfileplugins?' + "name=" + JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] + "&token=" + this.Common.adminToken
         let data = new FormData()
-        data.append("file",this.fileList.pop()['raw'])
+        data.append("file", this.fileList.pop()['raw'])
         this.$axios
-                .post(
-                        this.upurl,
-                        data
-                )
-                .then((resp) => {
-                  that.getUploadUrl()
-                })
-                .catch((err) => {
-                  this.$message.error("失败: " + err + " 建议打开控制台查看");
-                  console.log(err);
-                });
+            .post(
+                this.upurl,
+                data
+            )
+            .then((resp) => {
+              that.getUploadUrl()
+            })
+            .catch((err) => {
+              this.$message.error("失败: " + err + " 建议打开控制台查看");
+              console.log(err);
+            });
       }
     },
     getModinfo(file) {
       var that = this;
       this.$axios
-        .get(
-          this.Common.url +
-            "/admin/moreplugininfo?filename="+ file.plguinFilename +"&name=" +
-            JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
-            "&token=" +
-            that.Common.adminToken,
-          this.param
-        )
-        .then((resp) => {
-          that.moreInfo = resp["data"];
-        })
-        .catch((err) => {
-          this.$message.error("失败: " + err + " 建议打开控制台查看");
-          console.log(err);
-        });
+          .get(
+              this.Common.url +
+              "/admin/moreplugininfo?filename=" + file.plguinFilename + "&name=" +
+              JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+              "&token=" +
+              that.Common.adminToken,
+              this.param
+          )
+          .then((resp) => {
+            that.moreInfo = resp["data"];
+          })
+          .catch((err) => {
+            this.$message.error("失败: " + err + " 建议打开控制台查看");
+            console.log(err);
+          });
     },
     getMod() {
       var that = this;
       this.$axios
-      .get(
-      this.Common.url +
-      "/admin/pluginScanning?name=" +
-      JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
-      "&token=" +
-      this.Common.adminToken
-      )
-      .then((resp) => {
-        that.tableData = resp["data"];
-      })
-      .catch((err) => {
-        this.$message.error("失败: " + err + " 建议打开控制台查看");
-        console.log(err);
-      }); 
+          .get(
+              this.Common.url +
+              "/admin/pluginScanning?name=" +
+              JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+              "&token=" +
+              this.Common.adminToken
+          )
+          .then((resp) => {
+            that.tableData = resp["data"];
+          })
+          .catch((err) => {
+            this.$message.error("失败: " + err + " 建议打开控制台查看");
+            console.log(err);
+          });
     },
-    modcmd(cmd, filename){
+    modcmd(cmd, filename) {
       console.log(cmd)
       var that = this;
       if (cmd != undefined) {
         this.$axios
-        .get(
-        this.Common.url +
-        "/admin/pluginScanning?name=" +
-        JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
-        "&token=" +
-        this.Common.adminToken +
-        "&cmd=" +
-        cmd +
-        "&filename=" + encodeURIComponent(filename)
-        )
-        .then((resp) => {
-          this.getMod();
-        })
-        .catch((err) => {
-          this.$message.error("失败: " + err + " 建议打开控制台查看");
-          console.log(err);
-        });
+            .get(
+                this.Common.url +
+                "/admin/pluginScanning?name=" +
+                JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+                "&token=" +
+                this.Common.adminToken +
+                "&cmd=" +
+                cmd +
+                "&filename=" + encodeURIComponent(filename)
+            )
+            .then((resp) => {
+              this.getMod();
+            })
+            .catch((err) => {
+              this.$message.error("失败: " + err + " 建议打开控制台查看");
+              console.log(err);
+            });
       }
     }
   },

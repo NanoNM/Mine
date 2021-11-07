@@ -12,7 +12,6 @@ import './components/common/directives';
 import 'babel-polyfill';
 import axios from 'axios';
 
-
 Vue.prototype.$axios = axios;
 axios.defaults.withCredentials = true;
 

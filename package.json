@@ -13,6 +13,7 @@
     "element-ui": "^2.11.0",
     "generate-asset-webpack-plugin": "^0.3.0",
     "mavon-editor": "^2.6.17",
+    "pako": "^2.0.4",
     "vue": "^2.6.10",
     "vue-cookies": "^1.7.2",
     "vue-cropperjs": "^3.0.0",

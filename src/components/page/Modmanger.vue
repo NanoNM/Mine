@@ -227,15 +227,15 @@
 
                   }).then((data) => {
                     this.$axios.get(
-                        this.Common.url +
-                        "/admin/modScanning?name=" +
-                        JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
-                        "&token=" +
-                        this.Common.adminToken +
-                        "&cmd=" +
-                        cmd +
-                        "&filename=" + encodeURIComponent(filename)
-                    )
+                      this.Common.url +
+                      "/admin/modScanning?name=" +
+                      JSON.parse(sessionStorage.getItem("user"))["userModel"]["user_name"] +
+                      "&token=" +
+                      this.Common.adminToken +
+                      "&cmd=" +
+                      cmd +
+                      "&filename=" + encodeURIComponent(filename)
+                      )
                         .then((resp) => {
                           this.getMod();
                         })
@@ -243,10 +243,9 @@
                           this.$message.error("失败: " + err + " 建议打开控制台查看");
                           console.log(err);
                         });
-                  })
-                  .catch(function (err) {
-                    //捕获异常
-                  });
+                    }).catch(function (err) {
+                      //捕获异常
+                    });
                 }else{
                   if (cmd !== undefined) {
                     this.$axios.get(

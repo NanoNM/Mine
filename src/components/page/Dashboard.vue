@@ -3,35 +3,39 @@
         <el-row :gutter="20">
             <el-col :span="8">
                 <el-card shadow="hover" class="mgb20" style="height: 252px">
-                    <div class="user-info-list">
-                        SpringBoot启动时间
-                        <span>{{systemData["springBootStartTime"] || "未获取"}}</span>
+                  <el-card class="box-card">
+                    <div class="user-info-list" style="color: #222222;font-size: 15px">
+                      SpringBoot启动时间
+                      <span>{{systemData["springBootStartTime"] || "未获取"}}</span>
                     </div>
-                    <div class="user-info-list">
-                        SpringBoot运行时间
-                        <span>{{systemData["springBootRunningTime"] || "未获取"}}</span>
+                    <div class="user-info-list" style="color: #130f0f;font-size: 15px">
+                      SpringBoot运行时间
+                      <span>{{systemData["springBootRunningTime"] || "未获取"}}</span>
                     </div>
+                  </el-card>
 
-                    <div class="user-info">
-                        <div class="user-info-cont">
-                            <div class="user-info-name"></div>
-                        </div>
-                    </div>
 
-                    <div class="user-info-list">
-                        MCServer启动时间
-                        <span>{{systemData["mcServerStartTime"] || "未获取"}}</span>
-                    </div>
-                    <div class="user-info-list">
-                        MCServer运行时间
-                        <span>{{systemData["mcServerRunningTime"] || "未获取"}}</span>
-                    </div>
+<!--                    <div class="user-info">-->
+<!--                        <div class="user-info-cont">-->
+<!--                            <div class="user-info-name"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                  <el-card class="box-card" style="margin-top: 3%;">
+                      <div class="user-info-list" style="color: #222222;font-size: 15px">
+                          MCServer启动时间
+                          <span >{{systemData["mcServerStartTime"] || "未获取"}}</span>
+                      </div>
+                      <div class="user-info-list" style="color: #222222;font-size: 15px">
+                          MCServer运行时间
+                          <span>{{systemData["mcServerRunningTime"] || "未获取"}}</span>
+                      </div>
+                  </el-card>
 
-                    <div class="user-info">
-                        <div class="user-info-cont">
-                            <div class="user-info-name"></div>
-                        </div>
-                    </div>
+<!--                    <div class="user-info">-->
+<!--                        <div class="user-info-cont">-->
+<!--                            <div class="user-info-name"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                     <div class="user-info-list">
 
@@ -66,7 +70,7 @@
                             <div class="grid-content grid-con-1">
                                 <i class="el-icon-cpu grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">
+                                    <div class="grid-num" style="font-size: 25px">
                                         {{ systeminfo["system"] }} {{ systeminfo["cpuInfo"] }}
                                     </div>
                                     <div>系统信息</div>

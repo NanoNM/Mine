@@ -42,6 +42,9 @@
               <p style="color: #F56C6C" v-if="scope.row.authority=='ban'">封禁 <el-button type="text">解除</el-button></p>
             </template>
           </el-table-column>
+
+          <el-table-column prop="authme_id" label="是否与Authme关联"></el-table-column>
+
           <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
               <el-button

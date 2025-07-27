@@ -468,11 +468,13 @@
                 };
                 web.onmessage = function (e) {
                     let json = JSON.parse(e.data);
-                    if (json["Authentication"] != undefined) {
-                        that.adminToken = json["Authentication"];
+
+
+                    if (json["name"] === "Authentication") {
+                        that.adminToken = json["object"];
                         that.Common.adminToken = that.adminToken;
                         that.sendname();
-                    } else if (json["console"] != undefined) {
+                    } else if (json["name"] === "console") {
                         that.$nextTick(() => {
                           setTimeout(() => {
                             const textarea = document.getElementById('mineconsole');
@@ -482,20 +484,22 @@
                         if (that.ServerConsole.length>100000){
                           that.ServerConsole = "";
                         }
-                        that.ServerConsole += json["console"];
-                    } else if (json["ServerStat"] != undefined) {
-                        if (json["ServerStat"] == 1) {
+                        that.ServerConsole += json["object"];
+                    } else if (json["name"] === "ServerStat") {
+                        if (json["object"] == 1) {
                             // that.getServerInfo();
                             that.serverStat = "success";
                         } else {
                             that.serverStat = "danger";
                         }
-                    } else if (json["systemInfo"] != undefined) {
-                        that.systeminfo["system"] = json["systemInfo"][0]["systemInfo"];
-                        that.systeminfo["cpuInfo"] = json["systemInfo"][0]["cpuInfo"];
-                        that.systeminfo["cpuUserInfo"] = json["systemInfo"][0]["cpuUserInfo"];
-                        that.systeminfo["memoryUserInfo"] = json["systemInfo"][0]["memoryUserInfo"];
-                        that.systemData = json["systemInfo"][0]
+                    } else if (json["name"] === "systemInfo") {
+                        console.log(json["object"]);
+
+                        that.systeminfo["system"] = json["object"]["systemInfo"];
+                        that.systeminfo["cpuInfo"] = json["object"]["cpuInfo"];
+                        that.systeminfo["cpuUserInfo"] = json["object"]["cpuUserInfo"];
+                        that.systeminfo["memoryUserInfo"] = json["object"]["memoryUserInfo"];
+                        that.systemData = json["object"]
                       // that.ServerConsole = json["console"];
                     }
                 };
